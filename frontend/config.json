@@ -1,0 +1,11 @@
+{
+    "logChannel": "",
+    "ticketCategory": "",
+    "verifiedRole": "",
+    "unverifiedRole": "",
+    "protectedUsers": [],
+    "cooldowns": {
+      "verify": 10
+    }
+  }
+  
