@@ -1,5 +1,6 @@
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('fs');
+const path = require('path'); // ✅ Required for frontend serving
 require('dotenv').config();
 
 const config = require('../config.json');
@@ -46,25 +47,32 @@ client.once('ready', () => {
   console.log(`✅ Bot is online as ${client.user.tag}`);
 });
 
-// ✅ Unified Express App (Tebex + API + Auth)
+// ✅ Unified Express App (Tebex + API + Auth + Frontend)
 const express = require('express');
 const app = express();
-const setupAuth = require('./auth');          // 👈 NEW: Auth setup
+const setupAuth = require('./auth');
 const tebexWebhook = require('./tebexWebhook');
 const apiRoutes = require('./apiRoutes');
 
 app.use(express.json());
 
-// 🔐 Setup Discord OAuth (before route protection)
+// 🔐 Setup Discord OAuth
 setupAuth(app);
 
 // ✅ Routes
 app.use('/tebex', tebexWebhook);
 app.use('/api', apiRoutes);
 
+// ✅ Serve frontend dashboard from /frontend/dist
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.get('*', (_, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
+
 // 🌐 Start the web server
-app.listen(3001, () => {
-  console.log('🌐 Express server running on http://localhost:3001');
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`🌐 Express server running on http://localhost:${PORT}`);
 });
 
 // Export the bot client
@@ -72,3 +80,4 @@ module.exports = client;
 
 // 🔐 Login the bot
 client.login(process.env.BOT_TOKEN);
+

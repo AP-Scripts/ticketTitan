@@ -1,0 +1,8 @@
+{
+    "name": "ticket-titan-fullstack",
+    "private": true,
+    "workspaces": [
+      "backend",
+      "frontend"
+    ]
+  }
